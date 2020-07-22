@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load myblogs %}
+{% load humanize %}
+
+
+{% block meta_title %}
+記事一覧-
+{{ block.super }}
+{% endblock  %}
+
+
+{% block content %}
+<form id="search-form" action="" method="GET" class="mb-6 ml-2 mt-4 align-top">
+	{{ search_form.key_word }}
+	<button class="cursor-default relative rounded-md border border-gray-400 px-2 py-1 mt-1 align-bottom" type="submit"
+		id="search-button">検索</button>
+	<div class="inline-checkbox overflow-auto whitespace-no-wrap p-0 mt-2">
+		{{ search_form.tags }}
+	</div>
+</form>
+
+<section class="ml-5">
+	{% if search_form.cleaned_data.tags %}
+	<p class="tags" id="select-tags">選択しているタグ: {% for tag in search_form.cleaned_data.tags %}
+		<span class="tag" data-pk="{{ tag.pk }}">{{ tag.name }}</span>
+		{% endfor %}
+	</p>
+	{% endif %}
+
+	{% for post in post_list %}
+	<article class="post mb-5">
+		<h2 class="post-title text-blue-400"><a href="{% url 'myblogs:post_detail' post.pk %}">{{ post.title}}</a></h2>
+		<p class="description">{{ post.description }}</p>
+		<div>
+			<time class="updated_at block"
+				datetime="{{ post.updated_at | date:'Y-m-d'}}">{{ post.updated_at | naturaltime }}に更新
+			</time>
+
+			{% for tag in post.tags.all %}
+			<span class="tag text-blue-400 cursor-pointer hover:opacity-50" data-pk="{{ tag.pk }}">{{ tag.name}}</span>
+			{% endfor %}
+
+		</div>
+	</article>
+	{% empty %}
+	<p class="post text-blue-700 text-xl mt-3 mb-4 ml-4">まだ記事がありません。</p>
+	{% endfor %}
+
+</section>
+
+<nav id="page" class="text-lg">
+
+	{% if page_obj.has_previous %}
+	<a class="page-link font-bold" href="?{% url_replace request 'page' page_obj.previous_page_number %}" title="前へ">
+		前へ
+	</a>
+	{% endif %}
+
+	<span
+		class=" ml-5">{{ page.obj.paginator.num_pages }}ページ中{{ page.obj.number }}ページ目（全{{ page_obj.paginator.count}}件）</span>
+
+
+	{% if page_obj.has_next %}
+	<a href="?{% url_replace request 'page' page_obj.next_page_number %}" class="page-link font-bold"
+		title="次ページへ">次へ</a>
+
+	{% endif %}
+
+
+</nav>
+{% endblock content %}

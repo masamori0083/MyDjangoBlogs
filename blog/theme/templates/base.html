@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- tailwindcss -->
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css" />
+		<link rel="stylesheet" href="{% static 'css/out.css' %}" type="text/css" />
+		<title>
+			{% block title %}
+			Morino Blogs
+			{% endblock title %}
+		</title>
+
+	</head>
+
+	<body>
+
+		<main>
+			<div class="container mt-2 ml-4">
+				{% block content %}
+				{% endblock content %}
+			</div>
+		</main>
+
+		<footer id="site-footer">
+			<div class="container" id="footer-container">
+				<p id="copyright" class="ml-4 mt-6"> ©️2020 Masamori</p>
+			</div>
+		</footer>
+
+	</body>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', e => {
+			const searchForm = document.getElementById('search-form');
+
+			for (const tag of document.getElementsByClassName('tag')) {
+				tag.addEventListener('click', () => {
+					const pk = tag.dataset.pk;
+					const checkbox = document.querySelector(`input[name="tags"][value="${pk}"]`);
+					if (checkbox.checked) {
+						checkbox.checked = false;
+					} else {
+						checkbox.checked = true;
+					}
+					searchForm.submit();
+				});
+			}
+
+			for (const check of document.getElementsByName('tags')) {
+				check.addEventListener('change', () => {
+					searchForm.submit();
+				});
+			}
+		});
+	</script>
+
+</html>

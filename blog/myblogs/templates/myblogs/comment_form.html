@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<form action="" method="POST" id="comment-form">
+	{{ form.non_field_errors }}
+	{% for field in form %}
+	<div class="field mb-5 max-w-full">
+		{{ field.label_tag }}
+		{{ field }}
+		{% if field.help_text %}
+		<span class="helptext text-xl">※{{ field.help_text }}</span>
+		{% endif %}
+		{{ field.errors }}
+	</div>
+	{% endfor %}
+	{% csrf_token %}
+
+	<button
+		class="btn-link box-border inline-block rounded text-center no-underline border-solid border-2 border-gray-500 ease-in py-0 px-2 m-2 hover:opacity-50"
+		type="submit">送信</button>
+	<a href="{% url 'myblogs:post_detail' post.pk %}"
+		class="cursor-pointer button btn-link text-blue-400 hover:opacity-50">送信せずに戻る</a>
+</form>
+{% endblock content %}
